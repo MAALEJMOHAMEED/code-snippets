@@ -1,0 +1,46 @@
+import { useState, useEffect, useMemo } from "react";
+
+/**
+ * 🧪 Composant de démonstration pour useState, useEffect et useMemo
+ */
+export default function ExampleComponent() {
+  // 🟢 1. useState — Gère l’état local
+  const [inputValue, setInputValue] = useState<number>(0);
+  const [data, setData] = useState<any>(null);
+
+  // 🟡 2. useEffect — Effet secondaire (ex: appel API)
+  useEffect(() => {
+    async function fetchData() {
+      // Exemple simulé d’appel API
+      const result = await fetch("https://jsonplaceholder.typicode.com/posts/" + inputValue)
+        .then((res) => res.json());
+
+      setData(result);
+    }
+
+    fetchData();
+  }, [inputValue]); // 👈 Re-exécute si inputValue change
+
+  // 🔵 3. useMemo — Optimisation d’un calcul coûteux
+  const computedValue = useMemo(() => {
+    console.log("Calcul en cours...");
+    return inputValue * 1000; // Exemple de calcul
+  }, [inputValue]);
+
+  return (
+    <div>
+      <h3>Composant Démo React</h3>
+
+      <input
+        type="number"
+        value={inputValue}
+        onChange={(e) => setInputValue(parseInt(e.target.value))}
+      />
+
+      <p>Valeur calculée (useMemo) : {computedValue}</p>
+
+      <h4>Données récupérées (useEffect) :</h4>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
